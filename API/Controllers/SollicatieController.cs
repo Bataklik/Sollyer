@@ -1,0 +1,39 @@
+using API.DTOs;
+using API.Interfaces;
+using Microsoft.AspNetCore.Mvc;
+
+namespace API.Controllers;
+[ApiController]
+[Route("api/[controller]")]
+public class SollicatieController: ControllerBase {
+    
+    private readonly ISollicitatieService _service;
+    
+    public SollicatieController(ISollicitatieService sollicitatieService) {
+        _service = sollicitatieService;
+    }
+    
+    [HttpGet]
+    public async Task<IActionResult> GetAll() {
+        var sollicitaties = await _service
+            .GetAllAsync();
+
+        return Ok(sollicitaties);
+    }
+    
+    [HttpGet("{id}")]
+    public async Task<IActionResult> GetById(int id) {
+        var sollicitatie = await _service
+            .GetByIdAsync(id);
+        
+        if  (sollicitatie == null) return NotFound();
+        
+        return Ok(sollicitatie);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> CreateSollicitatie(CreateSollicitatieDto dto) {
+        var sollicitatie = await _service.CreateAsync(dto);
+        return Ok(sollicitatie);
+    }
+}
