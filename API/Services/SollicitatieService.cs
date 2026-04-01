@@ -3,7 +3,6 @@ using API.Data;
 using API.DTOs;
 using API.Interfaces;
 using API.Models;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 
 namespace API.Services;
@@ -42,8 +41,32 @@ public class SollicitatieService : ISollicitatieService {
         await _context.SaveChangesAsync();
         return ToDto(sollicitatie);
     }
-    public Task UpdateAsync(int id, UpdateSollicitatieDto dto) {
-        throw new NotImplementedException();
+    public async Task<bool> UpdateAsync(int id, UpdateSollicitatieDto dto) {
+        var sollicitatie = await _context.Sollicitaties
+            .Include(s => s.BedrijfInfo)
+            .FirstOrDefaultAsync(s => s.Id == id);
+        
+        if (sollicitatie is null) return false;
+        // Waardes aanpassen
+        if (!string.IsNullOrEmpty(dto.Bedrijfsnaam))
+            sollicitatie.BedrijfInfo.Naam = dto.Bedrijfsnaam;
+
+        if (!string.IsNullOrEmpty(dto.Locatie))
+            sollicitatie.BedrijfInfo.Locatie = dto.Locatie;
+
+        if (dto.Datum.HasValue)
+            sollicitatie.Datum = dto.Datum.Value;
+
+        if (!string.IsNullOrEmpty(dto.Status))
+            sollicitatie.Status = Enum.Parse<SollicitatieStatus>(dto.Status);
+
+        if (!string.IsNullOrEmpty(dto.Notities))
+            sollicitatie.Notities = dto.Notities;
+
+        if (!string.IsNullOrEmpty(dto.Link))
+            sollicitatie.Link = dto.Link;
+        await _context.SaveChangesAsync();
+        return true;  
     }
 
     private static SollicitatieResponseDto ToDto(Sollicitatie s) => new(
@@ -57,8 +80,10 @@ public class SollicitatieService : ISollicitatieService {
     );
 
     public async Task<bool> DeleteAsync(int id) {
-        var sollicitatie = await  _context.Sollicitaties
-            .FindAsync(id);
+        var sollicitatie = await _context.Sollicitaties
+            .Include(s => s.BedrijfInfo)
+            .FirstOrDefaultAsync(s => s.Id == id);
+
         if (sollicitatie is null) return false;
         
         _context.Sollicitaties.Remove(sollicitatie);
