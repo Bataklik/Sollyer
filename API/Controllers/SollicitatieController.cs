@@ -6,10 +6,10 @@ namespace API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class SollicatieController : ControllerBase {
+public class SollicitatieController : ControllerBase {
     private readonly ISollicitatieService _service;
 
-    public SollicatieController(ISollicitatieService sollicitatieService) {
+    public SollicitatieController(ISollicitatieService sollicitatieService) {
         _service = sollicitatieService;
     }
 
