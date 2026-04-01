@@ -42,4 +42,17 @@ public class SollicatieController : ControllerBase {
             new{ id = sollicitatie.id }, sollicitatie
         );
     }
+    
+    [HttpPut("{id}")]
+    public async Task<IActionResult> UpdateSollicitatie(int id, UpdateSollicitatieDto dto)
+    {
+        var result = await _service.UpdateAsync(id, dto);
+        return result ? NoContent() : NotFound(); 
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeleteSollicitatie(int id) {
+        var result = await _service.DeleteAsync(id);
+        return result ? NoContent() : NotFound();
+    }
 }
