@@ -6,14 +6,14 @@ public class Sollicitatie {
     public int BedrijfInfoId { get; set; }
     public BedrijfInfo BedrijfInfo { get; set; } = null;
     public DateTime Datum { get; set; }
-    public SollicatieStatus Status { get; set; }
+    public SollicitatieStatus Status { get; set; }
     public string? Link {
         get => _link;
         set => SetLink(value);
     }
     public string Notities { get; set; } = string.Empty;
 
-    public Sollicitatie(BedrijfInfo bedrijfInfo, DateTime datum, SollicatieStatus status, string link,
+    public Sollicitatie(BedrijfInfo bedrijfInfo, DateTime datum, SollicitatieStatus status, string link,
         string notities) {
         BedrijfInfo = bedrijfInfo;
         Datum = datum;
