@@ -8,13 +8,13 @@ using Moq;
 
 namespace Tests;
 
-public class SollicatieControllerTests {
+public class SollicitatieControllerTests {
     private readonly Mock<ISollicitatieService> _mockService;
-    private readonly SollicatieController _controller;
+    private readonly SollicitatieController _controller;
 
-    public SollicatieControllerTests() {
+    public SollicitatieControllerTests() {
         _mockService = new Mock<ISollicitatieService>();
-        _controller = new SollicatieController(_mockService.Object);
+        _controller = new SollicitatieController(_mockService.Object);
     }
 
     [Fact]
