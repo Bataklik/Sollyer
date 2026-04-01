@@ -1,6 +1,7 @@
 using API.Controllers;
 using API.DTOs;
 using API.Interfaces;
+using API.Models;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -94,5 +95,81 @@ public class SollicatieControllerTests {
         result
             .Should()
             .BeOfType<NotFoundResult>();
+    }
+    
+    [Fact]
+    public async Task Create_ReturnsCreated_WhenValid() {
+        // Arrange
+        var toCreate = new CreateSollicitatieDto(
+            "Test",
+            "Test",
+            DateTime.Today,
+            "Verzonden",
+            "www.google.com",
+            "Gesolliciteerd"); 
+        var fakeResponse = new SollicitatieResponseDto(
+            3, "Test", 
+            "Test", 
+            DateTime.Today, 
+            "Verzonden", 
+            "Gesolliciteerd", 
+            "https://google.com"
+        );
+        _mockService
+            .Setup(s => s.CreateAsync(toCreate))
+            .ReturnsAsync(fakeResponse);
+        
+        // Act
+        var result = await _controller
+            .CreateSollicitatie(toCreate);
+        
+        // Assert
+        var createdResult = result
+            .Should()
+            .BeOfType<CreatedAtActionResult>()
+            .Subject;
+        
+        createdResult.Value
+            .Should()
+            .BeEquivalentTo(fakeResponse);
+        
+        _mockService
+            .Verify(s => s.CreateAsync(toCreate), 
+                Times.Once);
+    }
+    
+    [Theory]
+    [InlineData("", "Test", "2026-01-01", "Verzonden", "www.google.com", "Gesolliciteerd")]
+    [InlineData("Eniris", "", "2026-01-01", "Verzonden", "www.google.com", "Gesolliciteerd")]
+    public async Task Create_ReturnsBadRequest_WhenInvalid(
+        string bedrijfsnaam,
+        string locatie,
+        string datum,
+        string status,
+        string link,
+        string notities) {
+        // Arrange
+        var toCreateInvald = new CreateSollicitatieDto(
+            bedrijfsnaam,
+            locatie,
+            DateTime.Parse(datum),
+            Enum.Parse<SollicitatieStatus>(status).ToString(),
+            link,
+            notities); 
+
+        _mockService
+            .Setup(s => s.CreateAsync(toCreateInvald))
+            .ReturnsAsync((SollicitatieResponseDto?)null); 
+        
+        // Act
+        var result = await _controller
+            .CreateSollicitatie(toCreateInvald);
+        
+        // Assert
+        result.Should()
+            .BeOfType<BadRequestResult>();
+        _mockService
+            .Verify(s => s.CreateAsync(It.IsAny<CreateSollicitatieDto>()), Times.Never);
+
     }
 }
