@@ -1,9 +1,11 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace API.DTOs;
 
 public record CreateSollicitatieDto(
-    string bedrijfsnaam, 
-    string locatie,
-    DateTime? datum,
-    string status, 
-    string? link, 
-    string? notities);
+    [Required, MinLength(3)] string Bedrijfsnaam, 
+    [Required, MinLength(3)] string Locatie,
+    DateTime? Datum,
+    [Required] string Status, 
+    string? Link, 
+    string? Notities);
