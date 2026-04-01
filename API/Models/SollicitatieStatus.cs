@@ -1,6 +1,6 @@
 namespace API.Models;
 
-public enum SollicatieStatus {
+public enum SollicitatieStatus {
     Verzonden,
     InBehandeling,
     GesprekGepland,
