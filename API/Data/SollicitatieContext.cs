@@ -16,8 +16,8 @@ public class SollicitatieContext:DbContext {
             new BedrijfInfo { Id = 2, Naam = "Nuanso", Locatie = "Gent" }
         );
         modelBuilder.Entity<Sollicitatie>().HasData(
-            new Sollicitatie { Id = 1, BedrijfInfoId = 1, Datum = new DateTime(2026, 3, 10), Status = SollicatieStatus.InBehandeling, Notities = "Vorige stageplek", Link = "https://eniris.io/" },
-            new Sollicitatie { Id = 2, BedrijfInfoId = 2, Datum = new DateTime(2026, 3, 15), Status = SollicatieStatus.GesprekGepland, Notities = "AI advertising project", Link = "https://www.nuanso.io/" }
+            new Sollicitatie { Id = 1, BedrijfInfoId = 1, Datum = new DateTime(2026, 3, 10), Status = SollicitatieStatus.InBehandeling, Notities = "Vorige stageplek", Link = "https://eniris.io/" },
+            new Sollicitatie { Id = 2, BedrijfInfoId = 2, Datum = new DateTime(2026, 3, 15), Status = SollicitatieStatus.GesprekGepland, Notities = "AI advertising project", Link = "https://www.nuanso.io/" }
         );
     }
     
