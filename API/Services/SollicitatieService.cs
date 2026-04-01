@@ -3,6 +3,7 @@ using API.Data;
 using API.DTOs;
 using API.Interfaces;
 using API.Models;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 
 namespace API.Services;
@@ -28,14 +29,14 @@ public class SollicitatieService : ISollicitatieService {
 
         return sollicitatie is null ? null : ToDto(sollicitatie);
     }
-    public async Task<SollicitatieResponseDto> CreateAsync(CreateSollicitatieDto dto) {
-        var bedrijf = new BedrijfInfo(dto.bedrijfsnaam, dto.locatie);
+    public async Task<SollicitatieResponseDto?> CreateAsync(CreateSollicitatieDto dto) {
+        var bedrijf = new BedrijfInfo(dto.Bedrijfsnaam, dto.Locatie);
         var sollicitatie = new Sollicitatie{
             BedrijfInfo = bedrijf,
-            Datum = dto.datum ?? DateTime.Today,
-            Status = Enum.Parse<SollicatieStatus>(dto.status),
-            Link = dto.link ?? "",
-            Notities = dto.notities ?? string.Empty
+            Datum = dto.Datum ?? DateTime.Today,
+            Status = Enum.Parse<SollicitatieStatus>(dto.Status),
+            Link = dto.Link,
+            Notities = dto.Notities ?? string.Empty
         };
         _context.Sollicitaties.Add(sollicitatie);
         await _context.SaveChangesAsync();
