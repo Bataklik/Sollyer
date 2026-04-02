@@ -40,7 +40,7 @@ using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<SollicitatieContext>();
     
-    db.Database.EnsureDeleted();
+    // db.Database.EnsureDeleted();
     db.Database.Migrate();
     
     db.Database.Migrate();
