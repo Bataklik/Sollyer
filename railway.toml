@@ -1,6 +1,6 @@
 [build]
-builder = "RAILPACK"
+builder = "DOCKERFILE"
+dockerfilePath = "Dockerfile"
 
-[[services]]
-name = "API"
-root = "API"
+[deploy]
+startCommand = "dotnet API.dll"
