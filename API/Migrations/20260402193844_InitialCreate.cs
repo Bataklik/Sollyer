@@ -17,10 +17,10 @@ namespace API.Migrations
                 name: "Bedrijven",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    Naam = table.Column<string>(type: "TEXT", nullable: false),
-                    Locatie = table.Column<string>(type: "TEXT", nullable: false)
+                    Naam = table.Column<string>(type: "text", nullable: false),
+                    Locatie = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -31,9 +31,9 @@ namespace API.Migrations
                 name: "Sollicitaties",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                    Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    BedrijfInfoId = table.Column<int>(type: "INTEGER", nullable: false),
+                    BedrijfInfoId = table.Column<int>(type: "integer", nullable: false),
                     Datum = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     SStatus = table.Column<int>(type: "integer", nullable: false),
                     Link = table.Column<string>(type: "text", nullable: true),
