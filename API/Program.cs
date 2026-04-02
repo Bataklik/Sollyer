@@ -25,7 +25,11 @@ builder.Services.AddDbContext<SollicitatieContext>(options => {
     else {
         options.UseSqlite("Data Source=sollicitaties.db");
     }
+    
+    options.ConfigureWarnings(w => 
+        w.Ignore(Microsoft.EntityFrameworkCore.Diagnostics.RelationalEventId.PendingModelChangesWarning));
 });
+
 
 builder.Services.AddOpenApi();
 
