@@ -12,8 +12,12 @@ public class SollicitatieContext:DbContext {
 
     protected override void OnModelCreating(ModelBuilder modelBuilder) {
         modelBuilder.Entity<BedrijfInfo>().HasData(
-            new BedrijfInfo { Id = 1, Naam = "Eniris", Locatie = "Gent" },
-            new BedrijfInfo { Id = 2, Naam = "Nuanso", Locatie = "Gent" }
+            new BedrijfInfo { Id = 1, 
+                Naam = "Eniris", 
+                Locatie = "Gent" },
+            new BedrijfInfo { Id = 2, 
+                Naam = "Nuanso", 
+                Locatie = "Gent" }
         );
         modelBuilder.Entity<Sollicitatie>().HasData(
             new Sollicitatie { 
