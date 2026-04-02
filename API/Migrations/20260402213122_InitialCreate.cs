@@ -1,9 +1,8 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
-
-#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
 
 namespace API.Migrations
 {
@@ -18,7 +17,7 @@ namespace API.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", Npgsql.EntityFrameworkCore.PostgreSQL.Metadata.NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Naam = table.Column<string>(type: "text", nullable: false),
                     Locatie = table.Column<string>(type: "text", nullable: false)
                 },
@@ -32,7 +31,7 @@ namespace API.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", Npgsql.EntityFrameworkCore.PostgreSQL.Metadata.NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     BedrijfInfoId = table.Column<int>(type: "integer", nullable: false),
                     Datum = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     Status = table.Column<int>(type: "integer", nullable: false),
@@ -48,24 +47,6 @@ namespace API.Migrations
                         principalTable: "Bedrijven",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.InsertData(
-                table: "Bedrijven",
-                columns: new[] { "Id", "Locatie", "Naam" },
-                values: new object[,]
-                {
-                    { 1, "Gent", "Eniris" },
-                    { 2, "Gent", "Nuanso" }
-                });
-
-            migrationBuilder.InsertData(
-                table: "Sollicitaties",
-                columns: new[] { "Id", "BedrijfInfoId", "Datum", "Link", "Notities", "Status" },
-                values: new object[,]
-                {
-                    { 1, 1, new DateTime(2026, 3, 10, 0, 0, 0, 0, DateTimeKind.Utc), "https://eniris.io/", "Vorige stageplek", 1 },
-                    { 2, 2, new DateTime(2026, 3, 15, 0, 0, 0, 0, DateTimeKind.Utc), "https://www.nuanso.io/", "AI advertising project", 2 }
                 });
 
             migrationBuilder.CreateIndex(

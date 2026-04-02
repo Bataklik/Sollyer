@@ -5,26 +5,33 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
 namespace API.Migrations
 {
     [DbContext(typeof(SollicitatieContext))]
-    [Migration("20260402193844_InitialCreate")]
+    [Migration("20260402213122_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "10.0.5");
+            modelBuilder
+                .HasAnnotation("ProductVersion", "10.0.5")
+                .HasAnnotation("Relational:MaxIdentifierLength", 63);
+
+            NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
             modelBuilder.Entity("API.Models.BedrijfInfo", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Locatie")
                         .IsRequired()
@@ -37,33 +44,21 @@ namespace API.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Bedrijven");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Locatie = "Gent",
-                            Naam = "Eniris"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            Locatie = "Gent",
-                            Naam = "Nuanso"
-                        });
                 });
 
             modelBuilder.Entity("API.Models.Sollicitatie", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<int>("BedrijfInfoId")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
 
                     b.Property<DateTime>("Datum")
-                        .HasColumnType("text");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Link")
                         .HasColumnType("text");
@@ -73,33 +68,13 @@ namespace API.Migrations
                         .HasColumnType("text");
 
                     b.Property<int>("Status")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 
                     b.HasIndex("BedrijfInfoId");
 
                     b.ToTable("Sollicitaties");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            BedrijfInfoId = 1,
-                            Datum = new DateTime(2026, 3, 10, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Link = "https://eniris.io/",
-                            Notities = "Vorige stageplek",
-                            Status = 1
-                        },
-                        new
-                        {
-                            Id = 2,
-                            BedrijfInfoId = 2,
-                            Datum = new DateTime(2026, 3, 15, 0, 0, 0, 0, DateTimeKind.Utc),
-                            Link = "https://www.nuanso.io/",
-                            Notities = "AI advertising project",
-                            Status = 2
-                        });
                 });
 
             modelBuilder.Entity("API.Models.Sollicitatie", b =>
