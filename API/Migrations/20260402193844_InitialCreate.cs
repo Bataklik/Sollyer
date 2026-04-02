@@ -18,7 +18,7 @@ namespace API.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                        .Annotation("Npgsql:ValueGenerationStrategy", Npgsql.EntityFrameworkCore.PostgreSQL.Metadata.NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Naam = table.Column<string>(type: "text", nullable: false),
                     Locatie = table.Column<string>(type: "text", nullable: false)
                 },
@@ -32,10 +32,10 @@ namespace API.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                        .Annotation("Npgsql:ValueGenerationStrategy", Npgsql.EntityFrameworkCore.PostgreSQL.Metadata.NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     BedrijfInfoId = table.Column<int>(type: "integer", nullable: false),
                     Datum = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    SStatus = table.Column<int>(type: "integer", nullable: false),
+                    Status = table.Column<int>(type: "integer", nullable: false),
                     Link = table.Column<string>(type: "text", nullable: true),
                     Notities = table.Column<string>(type: "text", nullable: false)
                 },
