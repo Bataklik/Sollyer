@@ -1,0 +1,6 @@
+[build]
+builder = "RAILPACK"
+
+[[services]]
+name = "API"
+root = "API"
