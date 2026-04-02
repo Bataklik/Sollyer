@@ -23,7 +23,8 @@ builder.Services.AddDbContext<SollicitatieContext>(options => {
         options.UseNpgsql(connectionString);
     }
     else {
-        options.UseSqlite("Data Source=sollicitaties.db");
+        options.UseNpgsql("Host=localhost;Database=sollicitaties;Username=postgres;Password=postgres");
+
     }
     
     options.ConfigureWarnings(w => 

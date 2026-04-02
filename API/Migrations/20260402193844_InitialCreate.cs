@@ -34,10 +34,10 @@ namespace API.Migrations
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     BedrijfInfoId = table.Column<int>(type: "INTEGER", nullable: false),
-                    Datum = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    Status = table.Column<int>(type: "INTEGER", nullable: false),
-                    Link = table.Column<string>(type: "TEXT", nullable: true),
-                    Notities = table.Column<string>(type: "TEXT", nullable: false)
+                    Datum = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    SStatus = table.Column<int>(type: "integer", nullable: false),
+                    Link = table.Column<string>(type: "text", nullable: true),
+                    Notities = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
