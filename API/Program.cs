@@ -40,6 +40,21 @@ using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<SollicitatieContext>();
     db.Database.Migrate();
+    
+    if (!db.Bedrijven.Any())
+    {
+        db.Bedrijven.AddRange(
+            new API.Models.BedrijfInfo { Naam = "Eniris", Locatie = "Gent" },
+            new API.Models.BedrijfInfo { Naam = "Nuanso", Locatie = "Gent" }
+        );
+        db.SaveChanges();
+
+        db.Sollicitaties.AddRange(
+            new API.Models.Sollicitatie { BedrijfInfoId = 1, Datum = DateTime.UtcNow, Status = API.Models.SollicitatieStatus.InBehandeling, Notities = "Vorige stageplek", Link = "https://eniris.io/" },
+            new API.Models.Sollicitatie { BedrijfInfoId = 2, Datum = DateTime.UtcNow, Status = API.Models.SollicitatieStatus.GesprekGepland, Notities = "AI advertising project", Link = "https://www.nuanso.io/" }
+        );
+        db.SaveChanges();
+    }
 }
 
 
