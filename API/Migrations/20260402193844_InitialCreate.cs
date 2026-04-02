@@ -64,8 +64,8 @@ namespace API.Migrations
                 columns: new[] { "Id", "BedrijfInfoId", "Datum", "Link", "Notities", "Status" },
                 values: new object[,]
                 {
-                    { 1, 1, new DateTime(2026, 3, 10, 0, 0, 0, 0, DateTimeKind.Unspecified), "https://eniris.io/", "Vorige stageplek", 1 },
-                    { 2, 2, new DateTime(2026, 3, 15, 0, 0, 0, 0, DateTimeKind.Unspecified), "https://www.nuanso.io/", "AI advertising project", 2 }
+                    { 1, 1, new DateTime(2026, 3, 10, 0, 0, 0, 0, DateTimeKind.Utc), "https://eniris.io/", "Vorige stageplek", 1 },
+                    { 2, 2, new DateTime(2026, 3, 15, 0, 0, 0, 0, DateTimeKind.Utc), "https://www.nuanso.io/", "AI advertising project", 2 }
                 });
 
             migrationBuilder.CreateIndex(

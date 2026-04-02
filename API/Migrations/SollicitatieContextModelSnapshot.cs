@@ -83,7 +83,7 @@ namespace API.Migrations
                         {
                             Id = 1,
                             BedrijfInfoId = 1,
-                            Datum = new DateTime(2026, 3, 10, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Datum = new DateTime(2026, 3, 10, 0, 0, 0, 0, DateTimeKind.Utc),
                             Link = "https://eniris.io/",
                             Notities = "Vorige stageplek",
                             Status = 1
@@ -92,7 +92,7 @@ namespace API.Migrations
                         {
                             Id = 2,
                             BedrijfInfoId = 2,
-                            Datum = new DateTime(2026, 3, 15, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Datum = new DateTime(2026, 3, 15, 0, 0, 0, 0, DateTimeKind.Utc),
                             Link = "https://www.nuanso.io/",
                             Notities = "AI advertising project",
                             Status = 2
