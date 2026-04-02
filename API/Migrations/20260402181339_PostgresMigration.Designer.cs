@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace API.Migrations
 {
     [DbContext(typeof(SollicitatieContext))]
-    [Migration("20260402180939_PostgresMigration")]
+    [Migration("20260402181339_PostgresMigration")]
     partial class PostgresMigration
     {
         /// <inheritdoc />
