@@ -60,5 +60,6 @@ using (var scope = app.Services.CreateScope())
 
 if (app.Environment.IsDevelopment()) app.MapOpenApi();
 
+app.MapGet("/", () => "Sollyer API is running! 🚀");
 app.MapControllers(); 
 app.Run();
