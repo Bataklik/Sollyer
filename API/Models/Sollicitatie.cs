@@ -4,7 +4,7 @@ public class Sollicitatie {
     private string? _link;
     public int Id { get; set; }
     public int BedrijfInfoId { get; set; }
-    public BedrijfInfo BedrijfInfo { get; set; } = null;
+    public BedrijfInfo BedrijfInfo { get; set; } 
     public DateTime Datum { get; set; }
     public SollicitatieStatus Status { get; set; }
     public string? Link {
