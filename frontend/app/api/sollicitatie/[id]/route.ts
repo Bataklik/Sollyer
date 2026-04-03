@@ -4,18 +4,30 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL
   ? `${process.env.NEXT_PUBLIC_API_URL}/api/sollicitatie`
   : 'http://localhost:5210/api/sollicitatie';
 
-export async function PUT(request: Request, { params }: { params: { id: string } }) {
+const statusToEnum: Record<string, string> = {
+  'In behandeling': 'InBehandeling',
+  'Gesprek gepland': 'GesprekGepland',
+  'Technische test': 'TechnischeTest',
+};
+
+function mapStatusToEnum(status: string): string {
+  return statusToEnum[status] ?? status;
+}
+
+export async function PUT(request: Request, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   const body = await request.json();
-  const res = await fetch(`${API_URL}/${params.id}`, {
+  if (body.status) body.status = mapStatusToEnum(body.status);
+  const res = await fetch(`${API_URL}/${id}`, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(body),
   });
-  const data = await res.json();
-  return NextResponse.json(data);
+  return new NextResponse(null, { status: res.status });
 }
 
-export async function DELETE(_: Request, { params }: { params: { id: string } }) {
-  await fetch(`${API_URL}/${params.id}`, { method: 'DELETE' });
+export async function DELETE(_: Request, { params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+  await fetch(`${API_URL}/${id}`, { method: 'DELETE' });
   return new NextResponse(null, { status: 204 });
 }
