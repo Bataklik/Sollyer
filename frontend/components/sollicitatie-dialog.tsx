@@ -7,6 +7,7 @@ import { CalendarIcon } from "lucide-react";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogFooter,
@@ -38,6 +39,7 @@ interface SollicitatieDialogProps {
   sollicitatie?: Sollicitatie | null;
   onSubmit: (data: Omit<Sollicitatie, "id">) => void;
   isSubmitting: boolean;
+  error?: string | null;
 }
 
 export function SollicitatieDialog({
@@ -46,6 +48,7 @@ export function SollicitatieDialog({
   sollicitatie,
   onSubmit,
   isSubmitting,
+  error,
 }: SollicitatieDialogProps) {
   const [bedrijfsnaam, setBedrijfsnaam] = React.useState("");
   const [locatie, setLocatie] = React.useState("");
@@ -61,7 +64,7 @@ export function SollicitatieDialog({
       if (sollicitatie) {
         setBedrijfsnaam(sollicitatie.bedrijfsnaam);
         setLocatie(sollicitatie.locatie);
-        setFunctie(sollicitatie.functie);
+        setFunctie(sollicitatie.functie || "");
         setDatum(new Date(sollicitatie.datum));
         setStatus(sollicitatie.status);
         setLink(sollicitatie.link || "");
@@ -98,6 +101,9 @@ export function SollicitatieDialog({
           <DialogTitle>
             {sollicitatie ? "Sollicitatie bewerken" : "Nieuwe sollicitatie"}
           </DialogTitle>
+          <DialogDescription className="sr-only">
+            Vul de gegevens in van de sollicitatie.
+          </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit}>
           <FieldGroup className="gap-4">
@@ -109,6 +115,7 @@ export function SollicitatieDialog({
                 onChange={(e) => setBedrijfsnaam(e.target.value)}
                 placeholder="Bijv. Vercel"
                 required
+                minLength={3}
               />
             </Field>
 
@@ -131,6 +138,7 @@ export function SollicitatieDialog({
                 onChange={(e) => setLocatie(e.target.value)}
                 placeholder="Bijv. Amsterdam"
                 required
+                minLength={3}
               />
             </Field>
 
@@ -202,6 +210,9 @@ export function SollicitatieDialog({
             </Field>
           </FieldGroup>
 
+          {error && (
+            <p className="mt-4 text-sm text-red-500">{error}</p>
+          )}
           <DialogFooter className="mt-6">
             <Button
               type="button"
