@@ -11,15 +11,17 @@ public class Sollicitatie {
         get => _link;
         set => SetLink(value);
     }
+    public string Functie { get; set; } = string.Empty;
     public string Notities { get; set; } = string.Empty;
 
     public Sollicitatie(BedrijfInfo bedrijfInfo, DateTime datum, SollicitatieStatus status, string link,
-        string notities) {
+        string notities, string functie = "") {
         BedrijfInfo = bedrijfInfo;
         Datum = datum;
         Status = status;
         Link = link;
         Notities = notities;
+        Functie = functie;
     }
 
     public Sollicitatie() { }

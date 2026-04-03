@@ -32,7 +32,8 @@ public class SollicitatieService : ISollicitatieService {
         var bedrijf = new BedrijfInfo(dto.Bedrijfsnaam, dto.Locatie);
         var sollicitatie = new Sollicitatie{
             BedrijfInfo = bedrijf,
-            Datum = dto.Datum ?? DateTime.Today,
+            Functie = dto.Functie ?? string.Empty,
+            Datum = DateTime.SpecifyKind(dto.Datum ?? DateTime.UtcNow.Date, DateTimeKind.Utc),
             Status = Enum.Parse<SollicitatieStatus>(dto.Status),
             Link = dto.Link,
             Notities = dto.Notities ?? string.Empty
@@ -54,8 +55,11 @@ public class SollicitatieService : ISollicitatieService {
         if (!string.IsNullOrEmpty(dto.Locatie))
             sollicitatie.BedrijfInfo.Locatie = dto.Locatie;
 
+        if (!string.IsNullOrEmpty(dto.Functie))
+            sollicitatie.Functie = dto.Functie;
+
         if (dto.Datum.HasValue)
-            sollicitatie.Datum = dto.Datum.Value;
+            sollicitatie.Datum = DateTime.SpecifyKind(dto.Datum.Value, DateTimeKind.Utc);
 
         if (!string.IsNullOrEmpty(dto.Status))
             sollicitatie.Status = Enum.Parse<SollicitatieStatus>(dto.Status);
@@ -73,6 +77,7 @@ public class SollicitatieService : ISollicitatieService {
         s.Id,
         s.BedrijfInfo.Naam,
         s.BedrijfInfo.Locatie,
+        s.Functie,
         s.Datum,
         s.Status.ToString(),
         s.Link,

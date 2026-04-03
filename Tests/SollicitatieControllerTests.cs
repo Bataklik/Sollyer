@@ -21,8 +21,8 @@ public class SollicitatieControllerTests {
     public async Task GetAll_ReturnsOkWithSollicitaties() {
         // Arrange
         var fakeSollicitaties = new List<SollicitatieResponseDto>{
-            new(1, "Eniris", "Gent", DateTime.Today, "InBehandeling", "Vorige stageplek", "Python developer"),
-            new(2, "Nuanso", "Gent", DateTime.Today, "GesprekGepland", "AI project", "Ai project implementeren")
+            new(1, "Eniris", "Gent", "Python developer", DateTime.Today, "InBehandeling", "Vorige stageplek", ""),
+            new(2, "Nuanso", "Gent", "AI developer", DateTime.Today, "GesprekGepland", "AI project", "")
         };
 
         _mockService
@@ -56,9 +56,11 @@ public class SollicitatieControllerTests {
             2,
             "Nuanso",
             "Gent",
+            "AI developer",
             DateTime.Today,
             "GesprekGepland",
-            "AI project", "Side project");
+            "AI project",
+            "Side project");
 
 
         _mockService
@@ -104,6 +106,7 @@ public class SollicitatieControllerTests {
         var toCreate = new CreateSollicitatieDto(
             "Test",
             "Test",
+            "Developer",
             DateTime.Today,
             "Verzonden",
             "www.google.com",
@@ -111,6 +114,7 @@ public class SollicitatieControllerTests {
         var fakeResponse = new SollicitatieResponseDto(
             3, "Test",
             "Test",
+            "Developer",
             DateTime.Today,
             "Verzonden",
             "Gesolliciteerd",
@@ -153,6 +157,7 @@ public class SollicitatieControllerTests {
         var toCreateInvald = new CreateSollicitatieDto(
             bedrijfsnaam,
             locatie,
+            null,
             DateTime.Parse(datum),
             Enum.Parse<SollicitatieStatus>(status).ToString(),
             link,
@@ -181,6 +186,7 @@ public class SollicitatieControllerTests {
             null,
             null,
             null,
+            null,
             "www.NieuwTest.com",
             null);
         _mockService.Setup(s =>
@@ -203,6 +209,7 @@ public class SollicitatieControllerTests {
         // Arrange
         var toUpdate = new UpdateSollicitatieDto(
             "NieuweTest",
+            null,
             null,
             null,
             null,
