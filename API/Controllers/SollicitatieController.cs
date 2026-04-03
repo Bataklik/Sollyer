@@ -31,7 +31,7 @@ public class SollicitatieController : ControllerBase {
 
     [HttpPost]
     public async Task<IActionResult> CreateSollicitatie(CreateSollicitatieDto dto) {
-        if (string.IsNullOrEmpty(dto.Bedrijfsnaam) ||
+if (string.IsNullOrEmpty(dto.Bedrijfsnaam) ||
             string.IsNullOrEmpty(dto.Status) ||
             string.IsNullOrEmpty(dto.Locatie)) return BadRequest();
 
