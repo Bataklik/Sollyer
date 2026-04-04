@@ -2,8 +2,13 @@
 
 import * as React from "react";
 import useSWR from "swr";
-import { Plus, Search } from "lucide-react";
-import { Input } from "@/components/ui/input";
+import { Download, Plus, Search } from "lucide-react";
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import {
     Select,
@@ -21,7 +26,7 @@ import { StatCards } from "@/components/stat-cards";
 import { SollicitatieTable } from "@/components/sollicitatie-table";
 import { SollicitatieDialog } from "@/components/sollicitatie-dialog";
 import { EmptyState } from "@/components/empty-state";
-import type { Sollicitatie, SollicitatieStatus } from "@/lib/types";
+import type { Sollicitatie } from "@/lib/types";
 import { STATUS_OPTIONS } from "@/lib/types";
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
@@ -74,6 +79,46 @@ export function Dashboard({ isLoggedIn }: DashboardProps) {
     const handleEdit = (sollicitatie: Sollicitatie) => {
         setEditingSollicitatie(sollicitatie);
         setDialogOpen(true);
+    };
+
+    const handleDownload = (format: "csv" | "markdown") => {
+        if (!data || data.length === 0) return;
+
+        let content: string;
+        let filename: string;
+        let mimeType: string;
+
+        if (format === "csv") {
+            const headers = ["Bedrijf", "Functie", "Locatie", "Datum", "Status", "Link", "Notities"];
+            const rows = data.map((s) => [
+                s.bedrijfsnaam,
+                s.functie,
+                s.locatie,
+                s.datum,
+                s.status,
+                s.link ?? "",
+                (s.notities ?? "").replace(/\n/g, " "),
+            ].map((v) => `"${String(v).replace(/"/g, '""')}"`).join(","));
+            content = [headers.join(","), ...rows].join("\n");
+            filename = "sollicitaties.csv";
+            mimeType = "text/csv";
+        } else {
+            const header = "| Bedrijf | Functie | Locatie | Datum | Status | Link | Notities |\n|---|---|---|---|---|---|---|";
+            const rows = data.map((s) =>
+                `| ${s.bedrijfsnaam} | ${s.functie} | ${s.locatie} | ${s.datum} | ${s.status} | ${s.link ?? "-"} | ${s.notities ?? "-"} |`
+            );
+            content = [header, ...rows].join("\n");
+            filename = "sollicitaties.txt";
+            mimeType = "text/plain";
+        }
+
+        const blob = new Blob([content], { type: mimeType });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = filename;
+        a.click();
+        URL.revokeObjectURL(url);
     };
 
     const handleDelete = async (id: string) => {
@@ -175,15 +220,34 @@ export function Dashboard({ isLoggedIn }: DashboardProps) {
                     </Select>
                 </div>
 
-                {isLoggedIn && (
-                    <Button
-                        onClick={handleAdd}
-                        className="bg-[#B1B2FF] text-slate-800 hover:bg-[#9d9eff]"
-                    >
-                        <Plus className="mr-2 h-4 w-4" />
-                        Nieuwe sollicitatie
-                    </Button>
-                )}
+                <div className="flex gap-2">
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                            <Button variant="outline" disabled={!data || data.length === 0}>
+                                <Download className="mr-2 h-4 w-4" />
+                                Download
+                            </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                            <DropdownMenuItem onClick={() => handleDownload("csv")}>
+                                CSV (Excel)
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => handleDownload("markdown")}>
+                                Markdown
+                            </DropdownMenuItem>
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+
+                    {isLoggedIn && (
+                        <Button
+                            onClick={handleAdd}
+                            className="bg-[#B1B2FF] text-slate-800 hover:bg-[#9d9eff]"
+                        >
+                            <Plus className="mr-2 h-4 w-4" />
+                            Nieuwe sollicitatie
+                        </Button>
+                    )}
+                </div>
             </div>
 
             {/* Table or Empty State */}
