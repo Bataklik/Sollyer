@@ -52,6 +52,7 @@ export function Dashboard({ isLoggedIn }: DashboardProps) {
     // Filter data based on search and status
     const filteredData = React.useMemo(() => {
         if (!data) return [];
+        console.log(data);
 
         return data.filter((item) => {
             const matchesSearch =
@@ -89,23 +90,37 @@ export function Dashboard({ isLoggedIn }: DashboardProps) {
         let mimeType: string;
 
         if (format === "csv") {
-            const headers = ["Bedrijf", "Functie", "Locatie", "Datum", "Status", "Link", "Notities"];
-            const rows = data.map((s) => [
-                s.bedrijfsnaam,
-                s.functie,
-                s.locatie,
-                s.datum,
-                s.status,
-                s.link ?? "",
-                (s.notities ?? "").replace(/\n/g, " "),
-            ].map((v) => `"${String(v).replace(/"/g, '""')}"`).join(","));
+            const headers = [
+                "Bedrijf",
+                "Functie",
+                "Locatie",
+                "Datum",
+                "Status",
+                "Link",
+                "Notities",
+            ];
+            const rows = data.map((s) =>
+                [
+                    s.bedrijfsnaam,
+                    s.functie,
+                    s.locatie,
+                    s.datum,
+                    s.status,
+                    s.link ?? "",
+                    (s.notities ?? "").replace(/\n/g, " "),
+                ]
+                    .map((v) => `"${String(v).replace(/"/g, '""')}"`)
+                    .join(","),
+            );
             content = [headers.join(","), ...rows].join("\n");
             filename = "sollicitaties.csv";
             mimeType = "text/csv";
         } else {
-            const header = "| Bedrijf | Functie | Locatie | Datum | Status | Link | Notities |\n|---|---|---|---|---|---|---|";
-            const rows = data.map((s) =>
-                `| ${s.bedrijfsnaam} | ${s.functie} | ${s.locatie} | ${s.datum} | ${s.status} | ${s.link ?? "-"} | ${s.notities ?? "-"} |`
+            const header =
+                "| Bedrijf | Functie | Locatie | Datum | Status | Link | Notities |\n|---|---|---|---|---|---|---|";
+            const rows = data.map(
+                (s) =>
+                    `| ${s.bedrijfsnaam} | ${s.functie} | ${s.locatie} | ${s.datum} | ${s.status} | ${s.link ?? "-"} | ${s.notities ?? "-"} |`,
             );
             content = [header, ...rows].join("\n");
             filename = "sollicitaties.txt";
@@ -143,11 +158,14 @@ export function Dashboard({ isLoggedIn }: DashboardProps) {
         try {
             let res: Response;
             if (editingSollicitatie) {
-                res = await fetch(`/api/sollicitatie/${editingSollicitatie.id}`, {
-                    method: "PUT",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(formData),
-                });
+                res = await fetch(
+                    `/api/sollicitatie/${editingSollicitatie.id}`,
+                    {
+                        method: "PUT",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(formData),
+                    },
+                );
             } else {
                 res = await fetch("/api/sollicitatie", {
                     method: "POST",
@@ -157,7 +175,9 @@ export function Dashboard({ isLoggedIn }: DashboardProps) {
             }
 
             if (!res.ok) {
-                setSubmitError("Opslaan mislukt. Controleer de ingevulde gegevens.");
+                setSubmitError(
+                    "Opslaan mislukt. Controleer de ingevulde gegevens.",
+                );
                 return;
             }
 
@@ -223,16 +243,23 @@ export function Dashboard({ isLoggedIn }: DashboardProps) {
                 <div className="flex gap-2">
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                            <Button variant="outline" disabled={!data || data.length === 0}>
+                            <Button
+                                variant="outline"
+                                disabled={!data || data.length === 0}
+                            >
                                 <Download className="mr-2 h-4 w-4" />
                                 Download
                             </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
-                            <DropdownMenuItem onClick={() => handleDownload("csv")}>
+                            <DropdownMenuItem
+                                onClick={() => handleDownload("csv")}
+                            >
                                 CSV (Excel)
                             </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => handleDownload("markdown")}>
+                            <DropdownMenuItem
+                                onClick={() => handleDownload("markdown")}
+                            >
                                 Markdown
                             </DropdownMenuItem>
                         </DropdownMenuContent>
@@ -252,7 +279,7 @@ export function Dashboard({ isLoggedIn }: DashboardProps) {
 
             {/* Table or Empty State */}
             {showEmptyState ? (
-                <EmptyState onAdd={handleAdd} />
+                <EmptyState onAdd={handleAdd} IsLoggedIn={isLoggedIn} />
             ) : showNoResults ? (
                 <div className="flex h-40 items-center justify-center rounded-lg border bg-white/80 text-muted-foreground">
                     Geen sollicitaties gevonden voor je zoekopdracht.
