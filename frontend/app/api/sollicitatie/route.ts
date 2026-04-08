@@ -1,12 +1,6 @@
 import { NextResponse } from "next/server";
-import { google } from "googleapis";
+import { getSheetsClient } from "@/utils/api-helpers";
 
-const auth = new google.auth.GoogleAuth({
-  credentials: JSON.parse(process.env.GOOGLE_SERVICE_ACCOUNT_KEY!),
-  scopes: ["https://www.googleapis.com/auth/spreadsheets"],
-});
-
-const sheets = google.sheets({ version: "v4", auth });
 const SPREADSHEET_ID = process.env.SPREADSHEET_ID;
 
 function mapStatus(status: string): string {
@@ -23,19 +17,9 @@ function mapStatus(status: string): string {
 
 const generateId = () => Math.random().toString(36).substring(2, 9);
 
-// Helper functie om de rij-index te vinden op basis van ID
-async function findRowIndexById(id: string) {
-  const response = await sheets.spreadsheets.values.get({
-    spreadsheetId: SPREADSHEET_ID,
-    range: "Blad1!A:A",
-  });
-  const rows = response.data.values || [];
-  const index = rows.findIndex(row => row[0] === id);
-  return index !== -1 ? index + 1 : null; // +1 omdat Sheets 1-based is
-}
-
 export async function GET() {
   try {
+    const sheets = await getSheetsClient();
     const response = await sheets.spreadsheets.values.get({
       spreadsheetId: SPREADSHEET_ID,
       range: "Blad1!A2:Z",
@@ -60,6 +44,7 @@ export async function GET() {
 
 export async function POST(request: Request) {
   const body = await request.json();
+  const sheets = await getSheetsClient();
   await sheets.spreadsheets.values.append({
     spreadsheetId: SPREADSHEET_ID,
     range: "Blad1!A:G",

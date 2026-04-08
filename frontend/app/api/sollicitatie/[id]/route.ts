@@ -1,26 +1,5 @@
+import { getSheetsClient } from "@/utils/api-helpers";
 import { NextResponse } from "next/server";
-import { google } from "googleapis";
-
-// Verplaats de logica die afhankelijk is van process.env naar een helper-functie
-async function getSheetsClient() {
-  const keyPath = process.env.GOOGLE_SERVICE_ACCOUNT_KEY;
-
-  if (!keyPath) {
-    throw new Error("GOOGLE_SERVICE_ACCOUNT_KEY is missing in environment variables");
-  }
-
-  const credentials = JSON.parse(keyPath);
-  if (credentials.private_key) {
-    credentials.private_key = credentials.private_key.replace(/\\n/g, "\n");
-  }
-
-  const auth = new google.auth.GoogleAuth({
-    credentials,
-    scopes: ["https://www.googleapis.com/auth/spreadsheets"],
-  });
-
-  return google.sheets({ version: "v4", auth });
-}
 
 const SPREADSHEET_ID = process.env.SPREADSHEET_ID;
 
@@ -42,7 +21,6 @@ export async function PUT(
     const { id } = await params;
     const body = await request.json();
 
-    // Initialiseer de client pas wanneer de route wordt aangeroepen
     const sheets = await getSheetsClient();
     const rowIndex = await findRowIndexById(sheets, id);
 
