@@ -1,39 +1,53 @@
 import { NextResponse } from "next/server";
 import { google } from "googleapis";
 
-// Gebruik dezelfde auth configuratie als in je andere route
-const auth = new google.auth.GoogleAuth({
-  credentials: JSON.parse(process.env.GOOGLE_SERVICE_ACCOUNT_KEY!),
-  scopes: ["https://www.googleapis.com/auth/spreadsheets"],
-});
+// Verplaats de logica die afhankelijk is van process.env naar een helper-functie
+async function getSheetsClient() {
+  const keyPath = process.env.GOOGLE_SERVICE_ACCOUNT_KEY;
 
-const sheets = google.sheets({ version: "v4", auth });
+  if (!keyPath) {
+    throw new Error("GOOGLE_SERVICE_ACCOUNT_KEY is missing in environment variables");
+  }
+
+  const credentials = JSON.parse(keyPath);
+  if (credentials.private_key) {
+    credentials.private_key = credentials.private_key.replace(/\\n/g, "\n");
+  }
+
+  const auth = new google.auth.GoogleAuth({
+    credentials,
+    scopes: ["https://www.googleapis.com/auth/spreadsheets"],
+  });
+
+  return google.sheets({ version: "v4", auth });
+}
+
 const SPREADSHEET_ID = process.env.SPREADSHEET_ID;
 
-// Helper om de rij-index te vinden op basis van het ID in kolom A
-async function findRowIndexById(id: string) {
+async function findRowIndexById(sheets: any, id: string) {
   const response = await sheets.spreadsheets.values.get({
     spreadsheetId: SPREADSHEET_ID,
     range: "Blad1!A:A",
   });
   const rows = response.data.values || [];
-  // Zoek de index van het ID (rij 1 is index 0, dus we doen +1 voor Sheets-index)
-  const index = rows.findIndex(row => row[0] === id);
+  const index = rows.findIndex((row: any) => row[0] === id);
   return index !== -1 ? index + 1 : null;
 }
+
 export async function PUT(
   request: Request,
-  { params }: { params: Promise<{ id: string }> } // Type aanpassen naar Promise
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    // CRUCIAL: Eerst de params awaiten voordat je .id gebruikt
     const { id } = await params;
-
     const body = await request.json();
-    const rowIndex = await findRowIndexById(id);
+
+    // Initialiseer de client pas wanneer de route wordt aangeroepen
+    const sheets = await getSheetsClient();
+    const rowIndex = await findRowIndexById(sheets, id);
 
     if (!rowIndex) {
-      return NextResponse.json({ error: "Sollicitatie niet gevonden" }, { status: 404 });
+      return NextResponse.json({ error: "Niet gevonden" }, { status: 404 });
     }
 
     await sheets.spreadsheets.values.update({
@@ -56,18 +70,19 @@ export async function PUT(
     return NextResponse.json({ success: true });
   } catch (error: any) {
     console.error("PUT Error:", error);
-    return NextResponse.json({ error: "Update mislukt" }, { status: 500 });
+    return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
 
 export async function DELETE(
   request: Request,
-  { params }: { params: Promise<{ id: string }> } // Ook hier aanpassen
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const { id } = await params; // Awaiten
+    const { id } = await params;
+    const sheets = await getSheetsClient();
+    const rowIndex = await findRowIndexById(sheets, id);
 
-    const rowIndex = await findRowIndexById(id);
     if (!rowIndex) {
       return NextResponse.json({ error: "Niet gevonden" }, { status: 404 });
     }
@@ -78,24 +93,22 @@ export async function DELETE(
     await sheets.spreadsheets.batchUpdate({
       spreadsheetId: SPREADSHEET_ID,
       requestBody: {
-        requests: [
-          {
-            deleteDimension: {
-              range: {
-                sheetId: sheetInternalId,
-                dimension: "ROWS",
-                startIndex: rowIndex - 1,
-                endIndex: rowIndex,
-              },
+        requests: [{
+          deleteDimension: {
+            range: {
+              sheetId: sheetInternalId,
+              dimension: "ROWS",
+              startIndex: rowIndex - 1,
+              endIndex: rowIndex,
             },
           },
-        ],
+        }],
       },
     });
 
     return NextResponse.json({ success: true });
   } catch (error: any) {
     console.error("DELETE Error:", error);
-    return NextResponse.json({ error: "Verwijderen mislukt" }, { status: 500 });
+    return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
