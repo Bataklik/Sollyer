@@ -72,9 +72,38 @@ export function SollicitatieTable({
         );
     }
 
+    const parseDate = (dateString: string) => {
+        const months: { [key: string]: number } = {
+            jan: 0,
+            feb: 1,
+            mar: 2,
+            apr: 3,
+            mei: 4,
+            jun: 5,
+            jul: 6,
+            aug: 7,
+            sep: 8,
+            okt: 9,
+            nov: 10,
+            dec: 11,
+        };
+        const parts = dateString.toLowerCase().split(" ");
+
+        if (parts.length === 3) {
+            const day = parseInt(parts[0], 10);
+            const month = months[parts[1]];
+            const year = parseInt(parts[2], 10);
+
+            if (month !== undefined && !isNaN(day) && !isNaN(year)) {
+                return new Date(year, month, day);
+            }
+        }
+        return new Date(0);
+    };
+
     const orderByDate = (a: Sollicitatie, b: Sollicitatie) => {
-        const dateA = new Date(a.datum).getTime();
-        const dateB = new Date(b.datum).getTime();
+        const dateA = parseDate(a.datum).getTime();
+        const dateB = parseDate(b.datum).getTime();
         return dateB - dateA;
     };
     const formatDate = (dateString: string) => {
