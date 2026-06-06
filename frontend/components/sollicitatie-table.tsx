@@ -72,6 +72,11 @@ export function SollicitatieTable({
         );
     }
 
+    const orderByDate = (a: Sollicitatie, b: Sollicitatie) => {
+        const dateA = new Date(a.datum).getTime();
+        const dateB = new Date(b.datum).getTime();
+        return dateB - dateA;
+    };
     const formatDate = (dateString: string) => {
         const date = new Date(dateString);
         return date.toLocaleDateString("nl-NL", {
@@ -99,7 +104,7 @@ export function SollicitatieTable({
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {data?.map((sollicitatie, index) => (
+                    {data?.sort(orderByDate).map((sollicitatie, index) => (
                         <TableRow
                             key={sollicitatie.id}
                             className={index % 2 === 1 ? "bg-[#EEF1FF]/50" : ""}
