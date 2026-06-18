@@ -1,6 +1,6 @@
 "use client";
 
-import { Pencil, PenOff, Trash2, ExternalLink, X } from "lucide-react";
+import { Pencil, Trash2, ExternalLink, X } from "lucide-react";
 import {
     Table,
     TableBody,
@@ -76,7 +76,7 @@ export function SollicitatieTable({
         const months: { [key: string]: number } = {
             jan: 0,
             feb: 1,
-            mar: 2,
+            mrt: 2,
             apr: 3,
             mei: 4,
             jun: 5,
