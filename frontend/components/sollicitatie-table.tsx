@@ -133,68 +133,81 @@ export function SollicitatieTable({
                     </TableRow>
                 </TableHeader>
                 <TableBody>
-                    {data?.sort(orderByDate).map((sollicitatie, index) => (
-                        <TableRow
-                            key={sollicitatie.id}
-                            className={index % 2 === 1 ? "bg-[#EEF1FF]/50" : ""}
-                        >
-                            <TableCell className="font-medium">
-                                {sollicitatie.link ? (
-                                    <a
-                                        href={sollicitatie.link}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="inline-flex items-center gap-1 text-[#6366f1] hover:underline"
-                                    >
-                                        {sollicitatie.bedrijfsnaam}
-                                        <ExternalLink className="h-3 w-3" />
-                                    </a>
-                                ) : (
-                                    sollicitatie.bedrijfsnaam
-                                )}
-                            </TableCell>
-                            <TableCell>{sollicitatie.functie}</TableCell>
-                            <TableCell>
-                                {formatDate(sollicitatie.datum)}
-                            </TableCell>
-                            <TableCell>
-                                <StatusBadge status={sollicitatie.status} />
-                            </TableCell>
-                            <TableCell className="max-w-50 truncate">
-                                {sollicitatie.notities || "-"}
-                            </TableCell>
-                            <TableCell className="text-right">
-                                {isLoggedIn ? (
-                                    <div className="flex justify-end gap-1">
-                                        <Button
-                                            variant="ghost"
-                                            size="icon"
-                                            onClick={() => onEdit(sollicitatie)}
-                                            className="h-8 w-8 text-muted-foreground hover:text-foreground"
-                                        >
-                                            <Pencil className="h-4 w-4" />
-                                            <span className="sr-only">
-                                                Bewerken
-                                            </span>
-                                        </Button>
-                                        <Button
-                                            variant="ghost"
-                                            size="icon"
-                                            onClick={() =>
-                                                onDelete(sollicitatie.id)
-                                            }
-                                            className="h-8 w-8 text-muted-foreground hover:text-destructive"
-                                        >
-                                            <Trash2 className="h-4 w-4" />
-                                            <span className="sr-only">
-                                                Verwijderen
-                                            </span>
-                                        </Button>
-                                    </div>
-                                ) : null}
-                            </TableCell>
-                        </TableRow>
-                    ))}
+                    {data &&
+                        [...data]
+                            .sort(orderByDate)
+                            .map((sollicitatie, index) => (
+                                <TableRow
+                                    key={sollicitatie.id}
+                                    className={
+                                        index % 2 === 1 ? "bg-[#EEF1FF]/50" : ""
+                                    }
+                                >
+                                    <TableCell className="font-medium">
+                                        {sollicitatie.link ? (
+                                            <a
+                                                href={sollicitatie.link}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="inline-flex items-center gap-1 text-[#6366f1] hover:underline"
+                                            >
+                                                {sollicitatie.bedrijfsnaam}
+                                                <ExternalLink className="h-3 w-3" />
+                                            </a>
+                                        ) : (
+                                            sollicitatie.bedrijfsnaam
+                                        )}
+                                    </TableCell>
+                                    <TableCell>
+                                        {sollicitatie.functie}
+                                    </TableCell>
+                                    <TableCell>
+                                        {formatDate(sollicitatie.datum)}
+                                    </TableCell>
+                                    <TableCell>
+                                        <StatusBadge
+                                            status={sollicitatie.status}
+                                        />
+                                    </TableCell>
+                                    <TableCell className="max-w-50 truncate">
+                                        {sollicitatie.notities || "-"}
+                                    </TableCell>
+                                    <TableCell className="text-right">
+                                        {isLoggedIn ? (
+                                            <div className="flex justify-end gap-1">
+                                                <Button
+                                                    variant="ghost"
+                                                    size="icon"
+                                                    onClick={() =>
+                                                        onEdit(sollicitatie)
+                                                    }
+                                                    className="h-8 w-8 text-muted-foreground hover:text-foreground"
+                                                >
+                                                    <Pencil className="h-4 w-4" />
+                                                    <span className="sr-only">
+                                                        Bewerken
+                                                    </span>
+                                                </Button>
+                                                <Button
+                                                    variant="ghost"
+                                                    size="icon"
+                                                    onClick={() =>
+                                                        onDelete(
+                                                            sollicitatie.id,
+                                                        )
+                                                    }
+                                                    className="h-8 w-8 text-muted-foreground hover:text-destructive"
+                                                >
+                                                    <Trash2 className="h-4 w-4" />
+                                                    <span className="sr-only">
+                                                        Verwijderen
+                                                    </span>
+                                                </Button>
+                                            </div>
+                                        ) : null}
+                                    </TableCell>
+                                </TableRow>
+                            ))}
                 </TableBody>
             </Table>
         </div>
