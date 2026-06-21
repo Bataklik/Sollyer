@@ -87,7 +87,7 @@ export function SollicitatieTable({
             nov: 10,
             dec: 11,
         };
-        const parts = dateString.toLowerCase().split(" ");
+        const parts = dateString.trim().toLowerCase().split(" ");
 
         if (parts.length === 3) {
             const day = parseInt(parts[0], 10);
@@ -102,6 +102,14 @@ export function SollicitatieTable({
     };
 
     const orderByDate = (a: Sollicitatie, b: Sollicitatie) => {
+        const rejectedStatus = "Afgewezen";
+
+        const isRejectedA = a.status === rejectedStatus;
+        const isRejectedB = b.status === rejectedStatus;
+
+        if (isRejectedA && !isRejectedB) return 1;
+        if (!isRejectedA && isRejectedB) return -1;
+
         const dateA = parseDate(a.datum).getTime();
         const dateB = parseDate(b.datum).getTime();
         return dateB - dateA;

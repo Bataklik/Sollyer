@@ -52,7 +52,6 @@ export function Dashboard({ isLoggedIn }: DashboardProps) {
     // Filter data based on search and status
     const filteredData = React.useMemo(() => {
         if (!data) return [];
-        console.log(data);
 
         return data.filter((item) => {
             const matchesSearch =
